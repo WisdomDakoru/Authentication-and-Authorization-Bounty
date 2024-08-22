@@ -4,7 +4,7 @@ document.getElementById("register-form").addEventListener("submit", async (event
     const password = document.getElementById("register-password").value;
     
     try {
-        const response = await fetch(`https://super-duper-guacamole-g4xv794qwrv53v4vq-4001.app.github.dev/auth/register`, {
+        const response = await fetch(`http://localhost:4001/auth/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -28,7 +28,7 @@ document.getElementById("login-form").addEventListener("submit", async (event) =
     const password = document.getElementById("login-password").value;
     
     try {
-        const response = await fetch(`https://super-duper-guacamole-g4xv794qwrv53v4vq-4001.app.github.dev/auth/login`, {
+        const response = await fetch(`http://localhost:4001/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -54,7 +54,7 @@ document.getElementById("delete-user-form").addEventListener("submit", async (ev
     const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch(`https://super-duper-guacamole-g4xv794qwrv53v4vq-4001.app.github.dev/auth/delete/user`, {
+        const response = await fetch(`http://localhost:4001/auth/delete/user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
