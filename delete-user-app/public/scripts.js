@@ -1,8 +1,14 @@
+// Handle user registration
 document.getElementById("register-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const username = document.getElementById("register-username").value;
     const password = document.getElementById("register-password").value;
-    
+
+    if (!username || !password) {
+        alert("Username and password are required");
+        return;
+    }
+
     try {
         const response = await fetch(`http://localhost:4001/auth/register`, {
             method: "POST",
@@ -15,18 +21,26 @@ document.getElementById("register-form").addEventListener("submit", async (event
         if (response.ok) {
             alert("User registered successfully");
         } else {
-            alert("Error registering user");
+            const errorData = await response.json();
+            alert(`Error registering user: ${errorData.message || "Unknown error"}`);
         }
     } catch (error) {
         console.error("Error:", error);
+        alert("An error occurred while registering. Please try again.");
     }
 });
 
+// Handle user login
 document.getElementById("login-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const username = document.getElementById("login-username").value;
     const password = document.getElementById("login-password").value;
-    
+
+    if (!username || !password) {
+        alert("Username and password are required");
+        return;
+    }
+
     try {
         const response = await fetch(`http://localhost:4001/auth/login`, {
             method: "POST",
@@ -41,17 +55,30 @@ document.getElementById("login-form").addEventListener("submit", async (event) =
             localStorage.setItem("token", data.token); // Store token in localStorage
             alert("Logged in successfully");
         } else {
-            alert("Error logging in");
+            const errorData = await response.json();
+            alert(`Error logging in: ${errorData.message || "Invalid username or password"}`);
         }
     } catch (error) {
         console.error("Error:", error);
+        alert("An error occurred while logging in. Please try again.");
     }
 });
 
+// Handle user deletion
 document.getElementById("delete-user-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const username = document.getElementById("delete-username").value;
     const token = localStorage.getItem("token");
+
+    if (!username) {
+        alert("Username is required to delete a user");
+        return;
+    }
+
+    if (!token) {
+        alert("You must be logged in to delete a user");
+        return;
+    }
 
     try {
         const response = await fetch(`http://localhost:4001/auth/delete/user`, {
@@ -65,10 +92,16 @@ document.getElementById("delete-user-form").addEventListener("submit", async (ev
 
         if (response.ok) {
             alert("User deleted successfully");
+        } else if (response.status === 404) {
+            alert("Error: User not found");
+        } else if (response.status === 403) {
+            alert("Error: You are not authorized to delete this user");
         } else {
-            alert("Error deleting user");
+            const errorData = await response.json();
+            alert(`Error deleting user: ${errorData.message || "Unknown error"}`);
         }
     } catch (error) {
         console.error("Error:", error);
+        alert("An error occurred while deleting the user. Please try again.");
     }
 });
